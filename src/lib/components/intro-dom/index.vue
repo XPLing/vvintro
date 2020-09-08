@@ -20,7 +20,7 @@ import clickOut from '../../directive/clickOut'
 import { onElResize } from '../../util/onElResize'
 
 export default {
-  name: 'VueIntro',
+  name: 'VVIntro',
   props: {
     nextLabel: {
       type: String,

@@ -7,9 +7,9 @@ import mixin from './mixin'
 let Vue = null
 let cid = 0
 const INSTANCE = []
-export default class Index {
+export default class VVIntro {
   constructor (insertTarget, options) {
-    this.options = Object.assign({}, new.target._OPTIONS, options)
+    this.options = Object.assign({}, VVIntro._OPTIONS, options)
     this.id = ++cid
     this.elm = null // intro dom
     this.introComp = null // intro dom component instance
@@ -90,7 +90,7 @@ export default class Index {
     })
   }
 
-  create = (...args) => new Index(...args)
+  create = (...args) => new VVIntro(...args)
   introCreate = () => {
     this.init()
     const comp = introCreate(this.options, this.insertTarget)
@@ -118,7 +118,7 @@ export default class Index {
     }
   }
 }
-Index._OPTIONS = {
+VVIntro._OPTIONS = {
   /* Next button label in tooltip box */
   nextLabel: 'Next &rarr;',
   /* Previous button label in tooltip box */
@@ -128,7 +128,7 @@ Index._OPTIONS = {
   /* Intro target Component */
   introTargetComp: null
 }
-Index.install = function (_Vue, options) {
+VVIntro.install = function (_Vue, options) {
   options = Object.assign({}, DEFAULT_OPTIONS, options)
   Vue = _Vue
   Vue.prototype.$intro = (insertTarget, options) => {
@@ -138,7 +138,7 @@ Index.install = function (_Vue, options) {
       }
       insertTarget = document.body
     }
-    return new Index(insertTarget, options)
+    return new VVIntro(insertTarget, options)
   }
   const HubComp = Vue.extend(hub)
   Vue.prototype.$introHub = new HubComp()

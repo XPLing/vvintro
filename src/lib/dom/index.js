@@ -1,6 +1,6 @@
 import create from './create'
-import CIntro from '../components/intro-dom'
+import VVIntro from '../components/intro-dom'
 
 export default (props) => {
-  return create(CIntro, props)
+  return create(VVIntro, props)
 }
