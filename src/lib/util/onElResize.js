@@ -17,8 +17,9 @@ export function onElResize (el, handler) {
   let lastHeight = el.offsetHeight || 1
   const maxWidth = 10000 * (lastWidth)
   const maxHeight = 10000 * (lastHeight)
-  el.style.position = 'relative'
-
+  if (el.className.indexOf('vintro-scroll-wrapper') === -1) {
+    el.className = el.className ? el.className + ' vintro-scroll-wrapper' : 'vintro-scroll-wrapper'
+  }
   const expand = document.createElement('div')
   expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;'
   const shrink = expand.cloneNode(false)
@@ -36,9 +37,10 @@ export function onElResize (el, handler) {
   shrink.appendChild(shrinkChild)
   el.appendChild(expand)
   el.appendChild(shrink)
-
   if (expand.offsetParent !== el) {
-    el.style.position = 'relative'
+    if (el.className.indexOf('vintro-scroll-wrapper') === -1) {
+      el.className = el.className ? el.className + ' vintro-scroll-wrapper' : 'vintro-scroll-wrapper'
+    }
   }
 
   expand.scrollTop = shrink.scrollTop = maxHeight
@@ -73,6 +75,7 @@ export function onElResize (el, handler) {
     shrink.removeEventListener('scroll', onScroll)
     el.removeChild(expand)
     el.removeChild(shrink)
+    el.className = el.className.repeat(/\s?vintro-scroll-wrapper/, '')
   }
 
   return removeElResize

@@ -1,9 +1,8 @@
-.vintro-show
-  position relative
-  z-index 999999
-
-.c-vintro
-  .vintro-overlay
+.vintro
+  & *
+    margin 0
+    padding 0
+  .overlay
     position fixed
     z-index 999997
     left 0
@@ -14,16 +13,18 @@
     opacity 0.8
     transition opacity .3s 1s
 
-  .vintro-helper
+  .helper
     position absolute
     z-index 999998
     background-color #fff
     transition .3s
-  .vintro-tootip-layer
+
+  .tootip-layer
     position absolute
     z-index 999999
     transition .3s
-    .vintro-step
+
+    .step
       display: inline-block
       position: absolute
       top: 0
@@ -43,7 +44,7 @@
       white-space: nowrap
       box-shadow: 0 2px 5px rgba(0, 0, 0, .4)
 
-    .vintro-tootip
+    .tootip
       position: absolute
       bottom -10px
       left 0
@@ -59,11 +60,11 @@
       background-color: white
       box-sizing: content-box
 
-      .vintro-tootip-buttons
+      .tootip-buttons
         text-align right
         margin-top 10px
 
-        .vintro-tootip-button
+        .tootip-button
           box-sizing: content-box
           position: relative
           overflow: visible
@@ -80,16 +81,42 @@
           cursor: pointer
           outline: 0
           background-color: #ececec
-          background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f4f4f4), to(#ececec))
-          background-image: -moz-linear-gradient(#f4f4f4, #ececec)
-          background-image: -o-linear-gradient(#f4f4f4, #ececec)
           background-image: linear-gradient(#f4f4f4, #ececec)
 
-          & + .vintro-tootip-button {
+          & + .tootip-button
             margin-left 6px
-          }
 
-      .vintro-tootip-arrow
+
+      .tootip-bullets
+        text-align: center
+
+        .bullet-list
+          box-sizing: content-box
+          clear: both
+          margin: 15px auto 0
+          padding: 0
+          display: inline-block
+
+          .bullet-item
+            box-sizing: content-box
+            list-style: none
+            float: left
+            margin: 0 2px
+
+            a
+              box-sizing: content-box
+              display: block
+              width: 6px
+              height: 6px
+              background: #ccc
+              border-radius: 10px
+              text-decoration: none
+              cursor: pointer
+
+              &:hover, &.active
+                background: #999
+
+      .tootip-arrow
         border: 5px solid white
         content: ''
         position: absolute

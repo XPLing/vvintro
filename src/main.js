@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-import Intro from './lib/index'
+import VVIntro from './lib/index'
 
-Vue.use(Intro)
+Vue.use(VVIntro)
 new Vue({
   el: '#app',
   render: h => h(App)

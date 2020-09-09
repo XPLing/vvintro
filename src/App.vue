@@ -1,5 +1,5 @@
 <template lang="pug">
-  #app(v-intro-scope)
+  #app(v-intro-scope="")
     p
       button(@click="start") start
     img(src="./assets/logo.png" v-intro="{step:1, intro:'Step 1, Start'}")
@@ -54,7 +54,7 @@ ul
   padding: 0
 
 li
-  padding 10px
+  padding 100px 10px
   margin: 0 20px
 
 .horizontal li

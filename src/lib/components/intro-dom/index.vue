@@ -1,23 +1,27 @@
 <template lang="pug">
   transition(name="fade")
-    .c-vintro(v-show="isShow")
-      .vintro-overlay(v-click-out="hide")
-      .vintro-helper(:style="helperStyle")
-      .vintro-tootip-layer(:style="helperStyle")
-        i.vintro-step {{step}}
-        .vintro-tootip
-          .vintro-tootip-text {{`Step ${step}`}}
-          .vintro-tootip-bullets
-          .vintro-tootip-arrow.top
-          .vintro-tootip-buttons
-            button.vintro-tootip-button(v-html="skipLabel" @click="handleSkip")
-            button.vintro-tootip-button(v-if="step>1" v-html="prevLabel" @click="handlePrev")
-            button.vintro-tootip-button(v-if="step<stepCount" v-html="nextLabel" @click="handleNext")
+    .vintro(v-show="isShow")
+      .overlay(v-click-out="hide")
+      .helper(:style="helperStyle")
+      .tootip-layer(:style="helperStyle" ref="tooTipLayer")
+        i.step {{step}}
+        .tootip
+          .tootip-text {{`Step ${step}`}}
+          .tootip-bullets
+            ul.bullet-list
+              li.bullet-item(v-for="item in stepItems" :key="item.step")
+                a(:class="{'active':step===item.step}" @click="handleStep(item.step)") &nbsp;
+          .tootip-arrow.top
+          .tootip-buttons
+            button.tootip-button(v-html="skipLabel" @click="handleSkip")
+            button.tootip-button(v-if="step>1" v-html="prevLabel" @click="handlePrev")
+            button.tootip-button(v-if="step<stepCount" v-html="nextLabel" @click="handleNext")
 </template>
 
 <script>
 import clickOut from '../../directive/clickOut'
 import { onElResize } from '../../util/onElResize'
+import { getOffset } from '../../util/scroll'
 
 export default {
   name: 'VVIntro',
@@ -41,11 +45,21 @@ export default {
       helperStyle: {},
       tootipStyle: {},
       step: 1,
-      stepCount: 0,
+      introInstance: null,
       currentTarget: null
     }
   },
-  created () {
+  computed: {
+    stepCount () {
+      let count
+      if (this.introInstance) {
+        count = this.introInstance && this.introInstance.stepItems.length
+      }
+      return count || 0
+    },
+    stepItems () {
+      return this.introInstance && this.introInstance.stepItems
+    }
   },
   directives: {
     clickOut: clickOut
@@ -66,8 +80,10 @@ export default {
       this.oldTarget = targetElm
       if (!this.introInstance) {
         this.introInstance = introInstance
-        this.stepCount = introInstance.stepItems.length
       }
+      this.$nextTick(() => {
+        this.introInstance.scrollTo(this.currentTarget, this.$refs.tooTipLayer)
+      })
     },
     resize (e) {
       this.setPosition()
@@ -85,7 +101,7 @@ export default {
         top,
         width,
         height
-      } = this.currentTarget.getBoundingClientRect()
+      } = getOffset(this.currentTarget)
       const helperStyle = Object.assign({}, this.helperStyle, {
         top: top + 'px',
         left: left + 'px',
@@ -117,11 +133,14 @@ export default {
     },
     handleNext () {
       this.introInstance.nextStep()
+    },
+    handleStep (step) {
+      this.introInstance.toStep(step)
     }
   }
 }
 </script>
 
-<style lang="stylus">
-  @import "index.styl"
+<style lang="stylus" scoped>
+@import "index.styl"
 </style>
