@@ -157,14 +157,21 @@ export default class VVIntro {
       const contentHeight = rect.height + layerRect.height
       const top = rect.bottom - (rect.bottom - rect.top)
       const rectOffsetTop = getOffsetTop(targetElement)
-      let scrollTop = 0
-      if (top < 0 || targetElement.clientHeight > winHeight) {
-        window.scrollBy(0, rect.top - ((winHeight / 2) - (rect.height / 2)) - this.options.scrollPadding) // 30px padding from edge to look nice
-        //Scroll down
-      } else {
-        window.scrollBy(0, rect.top - ((winHeight / 2) - (rect.height / 2)) + this.options.scrollPadding) // 30px padding from edge to look nice
-      }
+      const scrollTop = getScrollDistance(targetElement, tooltipLayer, rect)
+      window.scrollBy(0, scrollTop)
     }
+  }
+
+  getScrollDistance (targetElement, tooltipLayer, rect) {
+    let res
+    const winHeight = getWinSize().height
+    if (top < 0 || targetElement.clientHeight > winHeight) {
+      //Scroll down
+      res = rect.top - ((winHeight / 2) - (rect.height / 2)) - this.options.scrollPadding // 30px padding from edge to look nice
+    } else {
+      res = rect.top - ((winHeight / 2) - (rect.height / 2)) + this.options.scrollPadding // 30px padding from edge to look nice
+    }
+    return res
   }
 
   checkToolPosition (targetElement, tooltipLayer) {
@@ -172,7 +179,9 @@ export default class VVIntro {
     const rectToolTipLayer = tooltipLayer.getBoundingClientRect()
     const top = getOffsetTop(targetElement)
     let onTop, onBottom, onLeft, onRight
-    if (top < 400) {}
+    if (this.options.toolTipPosition === 'bottom') {
+
+    }
   }
 }
 VVIntro._OPTIONS = {
@@ -194,6 +203,7 @@ VVIntro._OPTIONS = {
    * Options are: 'element' or 'tooltip'
    */
   scrollTo: 'element',
+  toolTipPosition: 'bottom'
 }
 
 /**
