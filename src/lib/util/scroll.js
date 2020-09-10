@@ -33,6 +33,12 @@ export function getScrollParent (element) {
 
   return document.body
 }
+
+export function getOffsetTop(el){
+  return el.offsetParent
+    ? el.offsetTop + getOffsetTop(el.offsetParent)
+    : el.offsetTop
+}
 /**
  * Provides a cross-browser way to get the screen dimensions
  * @api private

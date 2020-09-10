@@ -13,7 +13,6 @@
     ul
       li(v-intro="{intro:'Step 8, To do One', step: 8}") one
       li(v-intro="{intro:'Step 9, To do Two', step: 9}") three
-      li(v-intro="{intro:'Step 10, To do Three', step: 10}") two
 </template>
 
 <script>

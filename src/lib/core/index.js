@@ -1,4 +1,4 @@
-import { getWinSize } from '../util/scroll'
+import { getWinSize, getOffsetTop } from '../util/scroll'
 import introCreate from '../dom'
 
 let cid = 0
@@ -141,19 +141,23 @@ export default class VVIntro {
     scrollTo = scrollTo || this.options.scrollTo
     if (scrollTo === 'off') return
     let rect
-
+    const layerRect = tooltipLayer.getBoundingClientRect()
+    const targetRect = targetElement.getBoundingClientRect()
     if (!this.options.scrollToElement) return
 
     if (scrollTo === 'tooltip') {
-      rect = tooltipLayer.getBoundingClientRect()
+      rect = layerRect
     } else {
-      rect = targetElement.getBoundingClientRect()
+      rect = targetRect
     }
-
     if (!_elementInViewport(targetElement)) {
-      var winHeight = getWinSize().height
-      var top = rect.bottom - (rect.bottom - rect.top)
-
+      const winHeight = getWinSize().height
+      const docHeight = document.documentElement.offsetHeight
+      const winScrollTop = window.pageYOffset || document.documentElement.scrollTop
+      const contentHeight = rect.height + layerRect.height
+      const top = rect.bottom - (rect.bottom - rect.top)
+      const rectOffsetTop = getOffsetTop(targetElement)
+      let scrollTop = 0
       if (top < 0 || targetElement.clientHeight > winHeight) {
         window.scrollBy(0, rect.top - ((winHeight / 2) - (rect.height / 2)) - this.options.scrollPadding) // 30px padding from edge to look nice
         //Scroll down
@@ -161,6 +165,14 @@ export default class VVIntro {
         window.scrollBy(0, rect.top - ((winHeight / 2) - (rect.height / 2)) + this.options.scrollPadding) // 30px padding from edge to look nice
       }
     }
+  }
+
+  checkToolPosition (targetElement, tooltipLayer) {
+    const rect = targetElement.getBoundingClientRect()
+    const rectToolTipLayer = tooltipLayer.getBoundingClientRect()
+    const top = getOffsetTop(targetElement)
+    let onTop, onBottom, onLeft, onRight
+    if (top < 400) {}
   }
 }
 VVIntro._OPTIONS = {
@@ -181,7 +193,7 @@ VVIntro._OPTIONS = {
    *
    * Options are: 'element' or 'tooltip'
    */
-  scrollTo: 'tooltip',
+  scrollTo: 'element',
 }
 
 /**

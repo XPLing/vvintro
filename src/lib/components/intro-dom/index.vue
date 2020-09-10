@@ -5,13 +5,13 @@
       .helper(:style="helperStyle")
       .tootip-layer(:style="helperStyle" ref="tooTipLayer")
         i.step {{step}}
-        .tootip
+        .tootip(:class="toolPosition")
           .tootip-text {{`Step ${step}`}}
           .tootip-bullets
             ul.bullet-list
               li.bullet-item(v-for="item in stepItems" :key="item.step")
                 a(:class="{'active':step===item.step}" @click="handleStep(item.step)") &nbsp;
-          .tootip-arrow.top
+          .tootip-arrow(:class="arrowDirection")
           .tootip-buttons
             button.tootip-button(v-html="skipLabel" @click="handleSkip")
             button.tootip-button(v-if="step>1" v-html="prevLabel" @click="handlePrev")
@@ -23,12 +23,22 @@ import clickOut from '../../directive/clickOut'
 import { onElResize } from '../../util/onElResize'
 import { getOffset } from '../../util/scroll'
 
+const arrowDirectionMap = {
+  'top': 'bottom',
+  'bottom': 'top',
+  'left': 'right',
+  'right': 'left'
+}
 export default {
   name: 'VVIntro',
   props: {
     nextLabel: {
       type: String,
       default: ''
+    },
+    toolPosition: {
+      type: String,
+      default: 'top'
     },
     prevLabel: {
       type: String,
@@ -50,6 +60,10 @@ export default {
     }
   },
   computed: {
+    arrowDirection () {
+      const position = this.toolPosition.split('-')[0]
+      return arrowDirectionMap[position]
+    },
     stepCount () {
       let count
       if (this.introInstance) {
@@ -69,6 +83,7 @@ export default {
   },
   methods: {
     move (targetElm, step, introInstance) {
+      this.checkPosition(targetElm)
       // remove resize listener on previous step element
       this.clearElResize()
       // add resize listener on current step element
@@ -81,9 +96,10 @@ export default {
       if (!this.introInstance) {
         this.introInstance = introInstance
       }
-      this.$nextTick(() => {
-        this.introInstance.scrollTo(this.currentTarget, this.$refs.tooTipLayer)
-      })
+      this.introInstance.scrollTo(this.currentTarget, this.$refs.tooTipLayer)
+    },
+    checkPosition (el) {
+      this.introInstance.checkToolPosition(el, this.$refs.tooTipLayer)
     },
     resize (e) {
       this.setPosition()
