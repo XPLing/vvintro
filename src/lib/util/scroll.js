@@ -34,25 +34,38 @@ export function getScrollParent (element) {
   return document.body
 }
 
-export function getOffsetTop(el){
-  return el.offsetParent
-    ? el.offsetTop + getOffsetTop(el.offsetParent)
-    : el.offsetTop
+export function getOffsetTop (el) {
+  let left = el.offsetLeft, right, top = el.offsetTop, bottom
+  while (el.offsetParent) {
+    left += el.offsetLeft
+    top += el.offsetTop
+    el = el.offsetParent
+  }
+  right = left + el.offsetWidth
+  bottom = top + el.offsetHeight
+  return {
+    top,
+    bottom,
+    left,
+    right
+  }
 }
+
 /**
  * Provides a cross-browser way to get the screen dimensions
  * @api private
  * @method _getWinSize
  * @returns {Object} width and height attributes
  */
-export function getWinSize() {
+export function getWinSize () {
   if (window.innerWidth !== undefined) {
-    return { width: window.innerWidth, height: window.innerHeight };
+    return { width: window.innerWidth, height: window.innerHeight }
   } else {
-    var D = document.documentElement;
-    return { width: D.clientWidth, height: D.clientHeight };
+    var D = document.documentElement
+    return { width: D.clientWidth, height: D.clientHeight }
   }
 }
+
 /**
  * @api private
  * @method _elementInViewport

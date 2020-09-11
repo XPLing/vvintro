@@ -83,6 +83,9 @@ export default {
   },
   methods: {
     move (targetElm, step, introInstance) {
+      if (!this.introInstance) {
+        this.introInstance = introInstance
+      }
       this.checkPosition(targetElm)
       // remove resize listener on previous step element
       this.clearElResize()
@@ -93,13 +96,11 @@ export default {
       this.currentTarget = targetElm
       this.setPosition()
       this.oldTarget = targetElm
-      if (!this.introInstance) {
-        this.introInstance = introInstance
-      }
       this.introInstance.scrollTo(this.currentTarget, this.$refs.tooTipLayer)
     },
     checkPosition (el) {
-      this.introInstance.checkToolPosition(el, this.$refs.tooTipLayer)
+      const position = this.introInstance.checkToolPosition(el, this.$refs.tooTipLayer, this.toolPosition)
+      this.toolPosition = position || this.toolPosition
     },
     resize (e) {
       this.setPosition()

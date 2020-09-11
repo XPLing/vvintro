@@ -151,13 +151,7 @@ export default class VVIntro {
       rect = targetRect
     }
     if (!_elementInViewport(targetElement)) {
-      const winHeight = getWinSize().height
-      const docHeight = document.documentElement.offsetHeight
-      const winScrollTop = window.pageYOffset || document.documentElement.scrollTop
-      const contentHeight = rect.height + layerRect.height
-      const top = rect.bottom - (rect.bottom - rect.top)
-      const rectOffsetTop = getOffsetTop(targetElement)
-      const scrollTop = getScrollDistance(targetElement, tooltipLayer, rect)
+      const scrollTop = this.getScrollDistance(targetElement, tooltipLayer, rect)
       window.scrollBy(0, scrollTop)
     }
   }
@@ -174,14 +168,46 @@ export default class VVIntro {
     return res
   }
 
-  checkToolPosition (targetElement, tooltipLayer) {
+  checkToolPosition (targetElement, tooltipLayer, toolTipPosition) {
     const rect = targetElement.getBoundingClientRect()
     const rectToolTipLayer = tooltipLayer.getBoundingClientRect()
-    const top = getOffsetTop(targetElement)
-    let onTop, onBottom, onLeft, onRight
-    if (this.options.toolTipPosition === 'bottom') {
-
+    const offset = getOffsetTop(targetElement)
+    const top = offset.top
+    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight)
+    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth)
+    const contentHeight = rect.height + rectToolTipLayer.height
+    const contentWidth = Math.max(rect.width, rectToolTipLayer.width)
+    if (toolTipPosition === 'bottom') {
+      if (offset.top + contentHeight >= docHeight) {
+        return 'top'
+      }
     }
+    if (toolTipPosition === 'top') {
+      if (offset.top < contentHeight + 15) {
+        return 'bottom'
+      }
+    }
+    if (toolTipPosition === 'left') {
+      if (offset.left < contentWidth + 15) {
+        if (offset.right < docWidth) {
+          return 'right'
+        } else if (offset.top + contentHeight < docHeight) {
+          return 'bottom'
+        }
+        return 'top'
+      }
+    }
+    if (toolTipPosition === 'right') {
+      if (offset.right > docWidth) {
+        if (offset.left > contentWidth + 15) {
+          return 'left'
+        } else if (offset.top + contentHeight < docHeight) {
+          return 'bottom'
+        }
+        return 'top'
+      }
+    }
+    return false
   }
 }
 VVIntro._OPTIONS = {
